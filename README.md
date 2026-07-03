@@ -132,7 +132,9 @@ Python 코드에서는 이 정답률을 정규화하여 High / Low 라벨을 부
 
 아날로그-디지털 변환은 펌웨어에서 다음 식으로 전압으로 환산됩니다.
 
-`V[n] = ADC[n] × 3.3 / 4095`
+```math
+V[n] = ADC[n] × 3.3 / 4095
+```
 
 여기서 4095는 12비트 ADC의 최대 카운트입니다.
 
@@ -181,7 +183,9 @@ Python 코드에서는 이 정답률을 정규화하여 High / Low 라벨을 부
 #### (2) 5-포인트 이동평균
 노이즈를 완화하기 위해 최근 5개 샘플의 평균을 구합니다.
 
-`y[n] = (1/M) · Σ[k=0..M-1] x[n-k]`, where `M = 5`
+```math
+y[n] = (1/M) · Σ[k=0..M-1] x[n-k]`, where `M = 5`
+```
 
 #### (3) CMSIS-DSP 기반 IIR 필터
 펌웨어는 `arm_biquad_cascade_df2T_f32()`를 사용하여 2-stage biquad 필터를 적용합니다.  
@@ -190,17 +194,25 @@ Python 코드에서는 이 정답률을 정규화하여 High / Low 라벨을 부
 #### (4) 적응형 임계값(Adaptive threshold)
 필터 출력의 절댓값을 사용해 envelope `env`를 추적하고, 그 일정 비율을 threshold로 사용합니다.
 
-`env[n] = a_up·|x[n]| + (1-a_up)·env[n-1]` when `|x[n]| > env[n-1]`
-
-`env[n] = a_dn·|x[n]| + (1-a_dn)·env[n-1]` when `|x[n]| <= env[n-1]`
-
+```math
+env[n] = a_up·|x[n]| + (1-a_up)·env[n-1]` when `|x[n]| > env[n-1]
+```
+```math
+env[n] = a_dn·|x[n]| + (1-a_dn)·env[n-1]` when `|x[n]| <= env[n-1]
+```
+```math
 `thr[n] = K · env[n]`, where `a_up = 0.40`, `a_dn = 0.02`, `K = 0.15`
+```
 
 #### (5) 미분 기반 FSM 피크 검출
 코드는 단순 임계 비교가 아니라, **1차 미분 / 2차 미분 + 상태기계(FSM)** 를 사용합니다.
 
-- 1차 미분:  \( d_1[n] = x[n] - x[n-1] \)
-- 2차 미분:  \( d_2[n] = d_1[n] - d_1[n-1] \)
+- 1차 미분:  ```math
+  ( d_1[n] = x[n] - x[n-1] \)
+```
+- 2차 미분: ```math
+d_2[n] = d_1[n] - d_1[n-1]
+```
 
 FSM 상태는 다음과 같습니다.
 
