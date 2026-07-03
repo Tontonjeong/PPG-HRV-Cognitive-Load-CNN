@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+title: PPG-HRV Cognitive Load Classification using CNN/Transformer
+message: If you use this repository, please cite the associated research paper.
+authors:
+  - family-names: Ryu
+    given-names: Hyeong-Rok
+  - family-names: Kang
+    given-names: Woo-seok
+  - family-names: Kim
+    given-names: Kyung-Ho
+repository-code: https://github.com/Tontonjeong/PPG-HRV-Cognitive-Load-CNN
+keywords:
+  - PPG
+  - HRV
+  - CNN
+  - Transformer
+  - N-back
+  - cognitive load
+license: MIT
